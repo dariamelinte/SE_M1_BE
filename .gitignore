@@ -1,0 +1,5 @@
+/env
+.env
+inscrieriVenv/
+*.pyc
+**__pycache__
