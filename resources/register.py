@@ -21,3 +21,4 @@ class Register(Resource):
                 "email": email
             }
         }
+    
