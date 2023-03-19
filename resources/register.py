@@ -13,11 +13,13 @@ class Register(Resource):
         fullName = data.get('fullName')
         dateOfBirth = data.get('dateOfBirth')
         phoneNumber = data.get('phoneNumber')
+        messageKey = "Your account has been successfully created!"
 
         print(password)
 
         return {
             "success": True,
+            "message": messageKey,
             "account": {
                 "email": email
             }
