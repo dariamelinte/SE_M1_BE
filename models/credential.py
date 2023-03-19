@@ -1,5 +1,6 @@
 from enum import Enum
-from mongoengine import Document, StringField, DateTimeField, EmailField, BooleanField, IntField
+from mongoengine import Document, StringField, \
+    DateTimeField, EmailField, BooleanField, IntField
 
 class RoleType(Enum):
     ADMIN = "ADMIN"
@@ -8,7 +9,6 @@ class RoleType(Enum):
     NURSE = "NURSE"
 
 class Credential(Document):
-    id = IntField(primary_key=True)
     email = EmailField(required=True, unique=True)
     password = StringField(required=True)
     fullName = StringField(required=True)

@@ -16,7 +16,6 @@ db.init_app(app)
 api = Api(app)
 CORS(app,supports_credentials=True,origins='*')
 
-
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 api.add_resource(ForgotPassword, '/forgot_password')
