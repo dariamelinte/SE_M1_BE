@@ -17,3 +17,4 @@ class Credential(Document):
     role = StringField(required=True, choices=[role.value for role in RoleType], default=RoleType.PATIENT.value)
     isConfirmed = BooleanField(required=True, default=False)
     jwt = StringField()
+    
