@@ -1,11 +1,9 @@
-import json
-from flask import Flask, request, jsonify
-from flask_restful import Api, Resource
-from flask_cors import CORS
+import hashlib
+from flask import request
+from flask_restful import Resource
 
 from models.credentials import Credentials
 
-# /register:id
 class Register(Resource):
     def get(self):
         try:
@@ -17,7 +15,8 @@ class Register(Resource):
                 credentials.append({
                     "id": str(credential.id),
                     "email": credential.email,
-                    "fullName": credential.fullName,
+                    "firstName": credential.firstName,
+                    "lastName": credential.lastName,
                     "phoneNumber": credential.phoneNumber,
                     "role": credential.role,
                     "isConfirmed": credential.isConfirmed
@@ -33,22 +32,29 @@ class Register(Resource):
 
     def post(self):
         data = request.get_json() if request.get_json() else {}
+        password = data.pop('password')
+        password_bytes = password.encode('utf-8')
+        
+        hash_256 = hashlib.sha256()
+        hash_256.update(password_bytes)
+        data['password'] = hash_256.hexdigest()
 
         try:
             new_credential = Credentials(**data)
             new_credential.save()
-            
+
             return {
                 "success": True,
                 "message": "Your account has been successfully created!",
                 "credential": {
                     "id": str(new_credential.id),
                     "email": new_credential.email,
+                    "phoneNumber": new_credential.phoneNumber,
                     "firstName": new_credential.firstName,
                     "lastName": new_credential.lastName,
-                    "phoneNumber": new_credential.phoneNumber,
+                    "password": new_credential.password,
+                    "isConfirmed": new_credential.isConfirmed,
                     "role": new_credential.role,
-                    "isConfirmed": new_credential.isConfirmed
                 }
             }
         except Exception as e:
