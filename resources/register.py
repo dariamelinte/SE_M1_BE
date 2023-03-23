@@ -25,6 +25,7 @@ class Register(Resource):
 
             return {
                 "success": True,
+                "message": "Credentials have been successfully fetched!",
                 "credentials": credentials
             }
         except Exception as e:
@@ -36,13 +37,19 @@ class Register(Resource):
         try:
             new_credential = Credentials(**data)
             new_credential.save()
-
-            print(new_credential, new_credential.to_dict(), new_credential.to_json())
-
+            
             return {
                 "success": True,
-                # "credential": new_credential.to_json(),
-                "message": "Your account has been successfully created!"
+                "message": "Your account has been successfully created!",
+                "credential": {
+                    "id": str(new_credential.id),
+                    "email": new_credential.email,
+                    "firstName": new_credential.firstName,
+                    "lastName": new_credential.lastName,
+                    "phoneNumber": new_credential.phoneNumber,
+                    "role": new_credential.role,
+                    "isConfirmed": new_credential.isConfirmed
+                }
             }
         except Exception as e:
             return { "success": False, "error": str(e) }

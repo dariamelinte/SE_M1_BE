@@ -11,7 +11,8 @@ class RoleType(Enum):
 class Credentials(Document):
     email = EmailField(required=True, unique=True)
     password = StringField(required=True)
-    fullName = StringField(required=True)
+    firstName = StringField(required=True)
+    lastName = StringField(required=True)
     dateOfBirth = DateTimeField(required=False, trim=True)
     phoneNumber = StringField(required=True, trim=True) 
     role = StringField(required=True, choices=[role.value for role in RoleType], default=RoleType.PATIENT.value)
