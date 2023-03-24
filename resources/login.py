@@ -4,8 +4,6 @@ from flask_cors import CORS
 import hashlib
 from models.credentials import Credentials
 
-
-# /login:id
 class Login(Resource):
     def post(self):
         data = request.get_json() if request.get_json() else {}
@@ -17,17 +15,32 @@ class Login(Resource):
         hash_256.update(password_bytes)
         data['password'] = hash_256.hexdigest()
 
-
         try:
-            credential = Credentials.objects.all
-            print (credential)
-            
-        except Exception as e : 
-            return False
+            credential = Credentials.objects(**data).first()
 
-        return {
-            "success": True,
-            "account": {
-                "email": email
+            if credential is not None:
+                return {
+                    "success": True,
+                    "message": "Completely logged in.",
+                    "credential": {
+                        "id": str(credential.id),
+                        "email": credential.email,
+                        "phoneNumber": credential.phoneNumber,
+                        "firstName": credential.firstName,
+                        "lastName": credential.lastName,
+                        "password": credential.password,
+                        "isConfirmed": credential.isConfirmed,
+                        "role": credential.role,
+                    }
+                }
+            
+            return {
+                "success": False,
+                "message": "Credentials not found.",
             }
-        }
+        except Exception as e :
+            return {
+                "success": False,
+                "message": "Credentials not found.",
+                "error" : str(e)
+            }
