@@ -15,11 +15,12 @@ class Register(Resource):
                 credentials.append({
                     "id": str(credential.id),
                     "email": credential.email,
+                    "phoneNumber": credential.phoneNumber,
                     "firstName": credential.firstName,
                     "lastName": credential.lastName,
-                    "phoneNumber": credential.phoneNumber,
+                    "password": credential.password,
+                    "isConfirmed": credential.isConfirmed,
                     "role": credential.role,
-                    "isConfirmed": credential.isConfirmed
                 })
 
             return {
