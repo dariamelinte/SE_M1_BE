@@ -8,6 +8,9 @@ from resources.logout import Logout
 from resources.forgot_password import ForgotPassword
 from resources.register import Register
 
+from resources.doctors import Doctors
+from resources.patients import Patients
+
 app = Flask(__name__)
 
 app.config.from_object(Config)
@@ -20,6 +23,9 @@ api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 api.add_resource(ForgotPassword, '/forgot_password')
 api.add_resource(Register, '/register')
+
+api.add_resource(Doctors, '/doctors')
+api.add_resource(Patients, '/patients')
 
 if __name__ == '__main__':
     app.run(port=PORT, host="0.0.0.0", debug=False)
