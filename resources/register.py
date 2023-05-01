@@ -41,7 +41,6 @@ class Register(Resource):
         hash_256.update(password_bytes)
         data['password'] = hash_256.hexdigest()
 
-        print("HELLO?????")
         try:
             new_credential = Credentials(**data)
             new_credential.save()
