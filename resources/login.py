@@ -3,6 +3,8 @@ from flask_restful import Api, Resource
 from flask_cors import CORS
 import hashlib
 from models.credentials import Credentials
+import jwt
+from datetime import datetime, timedelta
 
 class Login(Resource):
     def post(self):
@@ -19,6 +21,11 @@ class Login(Resource):
             credential = Credentials.objects(**data).first()
 
             if credential is not None:
+                token_payload = {
+                    'user_id': str(credential.id),
+                    'exp': datetime.utcnow() + timedelta(hours=1)
+                }
+                token = jwt.encode(token_payload, 'your_secret_key_here', algorithm='HS256')
                 return {
                     "success": True,
                     "message": "Completely logged in.",
@@ -31,7 +38,8 @@ class Login(Resource):
                         "password": credential.password,
                         "isConfirmed": credential.isConfirmed,
                         "role": credential.role,
-                    }
+                    },
+                    "jwt": token.decode('utf-8')
                 }
             
             return {
