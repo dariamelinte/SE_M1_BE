@@ -32,6 +32,7 @@ class Register(Resource):
             return { "success": False, "error": str(e) }
 
     def post(self):
+        print("GOT HERE")
         data = request.get_json() if request.get_json() else {}
         password = data.pop('password')
         password_bytes = password.encode('utf-8')
