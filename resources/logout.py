@@ -10,7 +10,6 @@ class Logout(Resource):
             return {"success": False, "message": "No token provided."}, 401
 
         try:
-            decoded_token = jwt.decode(token, 'your_secret_key_here', algorithms=['HS256'])
             return {"success": True, "message": "Logged out successfully."}, 200
         except jwt.ExpiredSignatureError:
             return {"success": False, "message": "Signature expired. Please log in again."}, 401

@@ -8,7 +8,6 @@ def test_login(client):
         "email": "test@example.com",
         "password": "testpassword"
     }
-    
     response = client.post('/login', data=json.dumps(data), content_type='application/json')
     
     assert response.status_code == 200

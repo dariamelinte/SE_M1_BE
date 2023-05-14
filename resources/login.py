@@ -38,8 +38,9 @@ class Login(Resource):
                         "password": credential.password,
                         "isConfirmed": credential.isConfirmed,
                         "role": credential.role,
-                    },
-                    "jwt": token.decode('utf-8')
+                        "jwt": token.decode('utf-8'),
+                    }
+                    
                 }
             
             return {
