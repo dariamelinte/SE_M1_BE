@@ -1,10 +1,11 @@
 from flask import Flask, request
 from flask_restful import Api, Resource
 from flask_cors import CORS
-import hashlib
-from models.users import Users
-import jwt
 import datetime
+import jwt
+import hashlib
+
+from models.users import Users
 
 class Login(Resource):
     def post(self):
