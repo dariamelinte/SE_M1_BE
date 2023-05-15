@@ -4,7 +4,7 @@ from flask_cors import CORS
 import hashlib
 from models.users import Users
 import jwt
-from datetime import datetime, timedelta
+import datetime
 
 class Login(Resource):
     def post(self):
@@ -24,12 +24,20 @@ class Login(Resource):
                     "success": False,
                     "message": "Email or password incorrect.",
                 }
-
-            token_payload = {
-                'id': str(user.id),
-                'expirationTime': datetime.utcnow() + timedelta(hours=1)
+            # Get the current time
+            current_time = datetime.datetime.now()
+            # Add one hour to the current time
+            one_hour_later = current_time + datetime.timedelta(hours=1)
+            
+            # Define the payload (claims) for the JWT
+            payload = {
+                "user_id": str(user.id),
+                "expiration_time": one_hour_later.timestamp()
             }
-            token = jwt.encode(token_payload, 'm1_token', algorithm='HS256')
+
+            # Encode the payload and sign it with the secret key to create the JWT
+            user.jwt = jwt.encode(payload, "m1-personal-jwt", algorithm="HS256")
+            user.save()
         
             return {
                 "success": True,
@@ -38,10 +46,10 @@ class Login(Resource):
                     "id": str(user.id),
                     "email": user.email,
                     "isConfirmed": user.isConfirmed,
-                    "jwt": token,
+                    "jwt": user.jwt,
                     "firstName": user.firstName,
                     "lastName": user.lastName,
-                    "dateOfBirth": user.dateOfBirth,
+                    "dateOfBirth": str(user.dateOfBirth),
                     "phoneNumber": user.phoneNumber,
                     "role": user.role
                 }  

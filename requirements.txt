@@ -41,6 +41,7 @@ poetry==1.1.11
 poetry-core==1.0.7
 ptyprocess==0.7.0
 pycparser==2.21
+PyJWT==2.7.0
 pylev==1.4.0
 pymongo==4.3.3
 pyparsing==2.4.7
