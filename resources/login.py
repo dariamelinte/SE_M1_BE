@@ -2,14 +2,13 @@ from flask import Flask, request
 from flask_restful import Api, Resource
 from flask_cors import CORS
 import hashlib
-from models.credentials import Credentials
+from models.users import Users
 import jwt
 from datetime import datetime, timedelta
 
 class Login(Resource):
     def post(self):
         data = request.get_json() if request.get_json() else {}
-        email = data.get('email')
         password = data.pop('password')
 
         password_bytes = password.encode('utf-8')
@@ -18,38 +17,38 @@ class Login(Resource):
         data['password'] = hash_256.hexdigest()
 
         try:
-            credential = Credentials.objects(**data).first()
+            user = Users.objects(**data).first()
 
-            if credential is not None:
-                token_payload = {
-                    'user_id': str(credential.id),
-                    'exp': datetime.utcnow() + timedelta(hours=1)
-                }
-                token = jwt.encode(token_payload, 'your_secret_key_here', algorithm='HS256')
+            if user is None:
                 return {
-                    "success": True,
-                    "message": "Completely logged in.",
-                    "credential": {
-                        "id": str(credential.id),
-                        "email": credential.email,
-                        "phoneNumber": credential.phoneNumber,
-                        "firstName": credential.firstName,
-                        "lastName": credential.lastName,
-                        "password": credential.password,
-                        "isConfirmed": credential.isConfirmed,
-                        "role": credential.role,
-                        "jwt": token,
-                    }
-                    
+                    "success": False,
+                    "message": "Email or password incorrect.",
                 }
-            
-            return {
-                "success": False,
-                "message": "Credentials not found.",
+
+            token_payload = {
+                'id': str(user.id),
+                'expirationTime': datetime.utcnow() + timedelta(hours=1)
             }
+            token = jwt.encode(token_payload, 'm1_token', algorithm='HS256')
+        
+            return {
+                "success": True,
+                "message": "Completely logged in.",
+                "user": {
+                    "id": str(user.id),
+                    "email": user.email,
+                    "isConfirmed": user.isConfirmed,
+                    "jwt": token,
+                    "firstName": user.firstName,
+                    "lastName": user.lastName,
+                    "dateOfBirth": user.dateOfBirth,
+                    "phoneNumber": user.phoneNumber,
+                    "role": user.role
+                }  
+            } 
         except Exception as e :
             return {
                 "success": False,
-                "message": "Credentials not found.",
+                "message": "Oops, something went wrong, please try again.",
                 "error" : str(e)
             }

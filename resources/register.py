@@ -2,37 +2,10 @@ import hashlib
 from flask import request
 from flask_restful import Resource
 
-from models.credentials import Credentials
+from models.users import Users
 
 class Register(Resource):
-    def get(self):
-        try:
-            limit = request.args.get("limit", 25)
-            skip = request.args.get("skip", 0)
-            
-            credentials = []
-            for credential in Credentials.objects().skip(skip).limit(limit):
-                credentials.append({
-                    "id": str(credential.id),
-                    "email": credential.email,
-                    "phoneNumber": credential.phoneNumber,
-                    "firstName": credential.firstName,
-                    "lastName": credential.lastName,
-                    "password": credential.password,
-                    "isConfirmed": credential.isConfirmed,
-                    "role": credential.role,
-                })
-
-            return {
-                "success": True,
-                "message": "Credentials have been successfully fetched!",
-                "credentials": credentials
-            }
-        except Exception as e:
-            return { "success": False, "error": str(e) }
-
     def post(self):
-        print("GOT HERE")
         data = request.get_json() if request.get_json() else {}
         password = data.pop('password')
         password_bytes = password.encode('utf-8')
@@ -42,22 +15,24 @@ class Register(Resource):
         data['password'] = hash_256.hexdigest()
 
         try:
-            new_credential = Credentials(**data)
-            new_credential.save()
+            print(data)
+            new_user = Users(**data)
+            print(new_user)
+            new_user.save()
 
             return {
                 "success": True,
                 "message": "Your account has been successfully created!",
-                "credential": {
-                    "id": str(new_credential.id),
-                    "email": new_credential.email,
-                    "phoneNumber": new_credential.phoneNumber,
-                    "firstName": new_credential.firstName,
-                    "lastName": new_credential.lastName,
-                    "password": new_credential.password,
-                    "isConfirmed": new_credential.isConfirmed,
-                    "role": new_credential.role,
-                }
+                "user": {
+                    "id": str(new_user.id),
+                    "email": new_user.email,
+                    "isConfirmed": new_user.isConfirmed,
+                    "firstName": new_user.firstName,
+                    "lastName": new_user.lastName,
+                    "dateOfBirth": str(new_user.dateOfBirth),
+                    "phoneNumber": new_user.phoneNumber,
+                    "role": new_user.role
+                }  
             }
         except Exception as e:
             return { "success": False, "error": str(e) }
