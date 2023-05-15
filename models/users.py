@@ -29,4 +29,4 @@ class Users(Document):
     city = StringField()
     completeAddress = StringField()
     lastName = StringField()
-    specialization = Specialisations();
+    specialisation = Specialisations();

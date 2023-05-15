@@ -7,64 +7,64 @@ from models.users import Users
 # /doctors
 class Doctors(Resource):
     def get(self):
-        print("hello")
-        # try:
-        #     credentials = list(Credentials.objects(role="DOCTOR"))
-        #     data = []
+        try:
+            users = list(Users.objects(role="DOCTOR"))
+            data = []
 
-        #     for credential in credentials:
-        #         data.append({
-        #             "id": str(credential.id),
-        #             "email": credential.email,
-        #             "phoneNumber": credential.phoneNumber,
-        #             "firstName": credential.firstName,
-        #             "lastName": credential.lastName,
-        #             "isConfirmed": credential.isConfirmed,
-        #         })
-    
-        #     print(data)
+            for user in users:
+                data.append({
+                    "id": str(user.id),
+                    "email": user.email,
+                    "phoneNumber": user.phoneNumber,
+                    "firstName": user.firstName,
+                    "lastName": user.lastName,
+                    "isConfirmed": user.isConfirmed,
+                    "specialisation": {
+                        "name": user.specialisation.name
+                    }
+                })
 
-        #     return {
-        #         "success": True,
-        #         "message": "Doctors credentials fetched.",
-        #         "data": data
-        #     }
-        # except Exception as e :
-        #     return {
-        #         "success": False,
-        #         "message": "Credentials not found.",
-        #         "error" : str(e)
-        #     }
+            return {
+                "success": True,
+                "message": "Doctors fetched.",
+                "data": data
+            }
+        except Exception as e :
+            return {
+                "success": False,
+                "message": "Doctors not found.",
+                "error" : str(e)
+            }
         
     def put(self):
-        print("hello")
-        # data = request.get_json() if request.get_json() else {}
+        data = request.get_json() if request.get_json() else {}
 
-        # id = data.get('id')
-        # isAccepted = data.get('isAccepted')
+        id = data.get('id')
+        isAccepted = data.get('isAccepted')
 
-        # user = Credentials.objects.get(id=id)
+        user = Users.objects.get(id=id)
 
-        # if isAccepted:
-        #     user.isConfirmed = True
-        #     user.role = "DOCTOR"
-        # else:
-        #     user.role = "PATIENT"
+        if isAccepted:
+            user.isConfirmed = True
+            user.role = "DOCTOR"
+        else:
+            user.role = "PATIENT"
+            user.specialisation = None
         
-        # user.save()
-        # user = Credentials.objects.get(id=id)
+        user.save()
+        user = Users.objects.get(id=id)
         
-        # return {      
-        #     "success": True,
-        #     "message": "Successfully updated.",
-        #     "account": {
-        #         "id": str(user.id),
-        #         "email": user.email,
-        #         "phoneNumber": user.phoneNumber,
-        #         "firstName": user.firstName,
-        #         "lastName": user.lastName,
-        #         "password": user.password,
-        #         "isConfirmed": user.isConfirmed,
-        #         "role": user.role,
-        #     }
-        # }
+        return {      
+            "success": True,
+            "message": "Successfully updated.",
+            "user": {
+                "id": str(user.id),
+                "email": user.email,
+                "phoneNumber": user.phoneNumber,
+                "firstName": user.firstName,
+                "lastName": user.lastName,
+                "password": user.password,
+                "isConfirmed": user.isConfirmed,
+                "role": user.role,
+            }
+        }

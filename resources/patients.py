@@ -7,29 +7,28 @@ from models.users import Users
 # /patients
 class Patients(Resource):
     def get(self):
-        print("hello")
-        # try:
-        #     credentials = list(Credentials.objects(role="PATIENT"))
-        #     data = []
+        try:
+            users = list(Users.objects(role="PATIENT"))
+            data = []
 
-        #     for credential in credentials:
-        #         data.append({
-        #             "id": str(credential.id),
-        #             "email": credential.email,
-        #             "phoneNumber": credential.phoneNumber,
-        #             "firstName": credential.firstName,
-        #             "lastName": credential.lastName,
-        #             "isConfirmed": credential.isConfirmed,
-        #         })
+            for user in users:
+                data.append({
+                    "id": str(user.id),
+                    "email": user.email,
+                    "phoneNumber": user.phoneNumber,
+                    "firstName": user.firstName,
+                    "lastName": user.lastName,
+                    "isConfirmed": user.isConfirmed,
+                })
 
-        #     return {
-        #         "success": True,
-        #         "message": "Patients credentials fetched.",
-        #         "data": data
-        #     }
-        # except Exception as e :
-        #     return {
-        #         "success": False,
-        #         "message": "Credentials not found.",
-        #         "error" : str(e)
-        #     }
+            return {
+                "success": True,
+                "message": "Patients fetched.",
+                "data": data
+            }
+        except Exception as e :
+            return {
+                "success": False,
+                "message": "Patients not found.",
+                "error" : str(e)
+            }
